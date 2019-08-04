@@ -266,8 +266,12 @@ FlutterMethodChannel* _channel;
 - (void) playerStart {
     NSLog(@"playerStart");
     _ready = NO;
-    
-    AVURLAsset* avAsset = [AVURLAsset URLAssetWithURL:audioFileURL options:nil];
+
+    NSArray<NSHTTPCookie*>* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage].cookies;
+    NSDictionary<NSString*, NSString*>* values = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
+    NSDictionary<NSString*, id>* options = @{@"AVURLAssetHTTPHeaderFieldsKey":values};
+
+    AVURLAsset* avAsset = [AVURLAsset URLAssetWithURL:audioFileURL options:options];
     playerItem = [AVPlayerItem playerItemWithAsset:avAsset];
     audioPlayer = [AVPlayer playerWithPlayerItem:playerItem];
     
